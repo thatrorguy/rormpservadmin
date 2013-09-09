@@ -57,7 +57,7 @@ try
 		{
 			if($action=='login' && array_key_exists('password', $_POST) && addslashes($_POST['password'])==PASSWORD)
 			{
-				setcookie('admin_panel_password', sha1(PASSWORD), time()+60*60*24*365, dirname($_SERVER['PHP_SELF']), $_SERVER['HTTP_HOST']);
+				setcookie('admin_panel_password', sha1(PASSWORD), time()+60*60*24*365, dirname($_SERVER['PHP_SELF']), reset(explode(':',$_SERVER['HTTP_HOST'])));
 				$action = 'index';
 			}
 			else
@@ -79,7 +79,7 @@ try
 		// logout?
 		if($action=='logout')
 		{
-			setcookie('admin_panel_password', '', time()-3600, '/admin', $_SERVER['HTTP_HOST']);
+			setcookie('admin_panel_password', '', time()-3600, dirname($_SERVER['PHP_SELF']), reset(explode(':',$_SERVER['HTTP_HOST'])));
 			$title = 'Authorization Required';
 			$content = '<form method="post" action="?action=login" style="padding: 25px;">
 								<label for="password">password: </label>
