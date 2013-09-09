@@ -90,15 +90,15 @@ class AuthSimpleXMLRPCRequestHandler(SimpleXMLRPCRequestHandler):
             # got a valid XML RPC response
             self.send_response(200)
             # note: We don't bother with content-type here
-            if self.encode_threshold is not None:
-                if len(response) > self.encode_threshold:
-                    q = self.accept_encodings().get("gzip", 0)
-                    if q:
-                        try:
-                            response = xmlrpclib.gzip_encode(response)
-                            self.send_header("Content-Encoding", "gzip")
-                        except NotImplementedError:
-                            pass
+            #if self.encode_threshold is not None:
+            #    if len(response) > self.encode_threshold:
+            #        q = self.accept_encodings().get("gzip", 0)
+            #        if q:
+            #            try:
+            #                response = xmlrpclib.gzip_encode(response)
+            #                self.send_header("Content-Encoding", "gzip")
+            #            except NotImplementedError:
+            #                pass
             self.send_header("Content-length", str(len(response)))
             self.end_headers()
             self.wfile.write(response)
