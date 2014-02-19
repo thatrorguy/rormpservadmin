@@ -111,6 +111,15 @@ class AuthSimpleXMLRPCRequestHandler(SimpleXMLRPCRequestHandler):
             if match is not None and match.groups(1)[0] in self.server.authorizations:
                 return True
         return False
+		
+# Attempt to fix delays
+# See http://www.answermysearches.com/xmlrpc-server-slow-in-python-how-to-fix/2140/
+import BaseHTTPServer
+def not_insane_address_string(self):
+	host, port = self.client_address[:2]
+	return '%s (no getfqdn)' % host #used to call: socket.getfqdn(host)
+BaseHTTPServer.BaseHTTPRequestHandler.address_string = \
+	not_insane_address_string
 
 ## Extension of SimpleXMLRPCServer to support HTTP Basic Authentication.
 #
