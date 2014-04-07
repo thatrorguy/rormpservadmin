@@ -621,6 +621,11 @@ class exposedFunctions:
                 if os.path.exists("%s/%s.log" % (LOG_DIR, serverName)):
                     shutil.move("%s/%s.log" % (LOG_DIR, serverName), "%s/old/%s.%d.log" % (LOG_DIR, serverName, time.time()))
                 
+				# Print warning if resources directory does not exist
+				if not os.path.exists(RES_DIR):
+					print "Warning: Resource directory does not exist!"
+					print "info: RES_DIR = %s" % RES_DIR
+				
                 # Add server
                 if not serverName in server_process:
                     server_process[serverName] = {
@@ -634,11 +639,11 @@ class exposedFunctions:
                 server_process[serverName]['process'] = subprocess.Popen(
                     [
                         binfile,
-                        "-c", "%s/%s.cfg" % (CFG_DIR, serverName),
+                        "-c", os.path.abspath("%s/%s.cfg" % (CFG_DIR, serverName)),
                         "-fg",
                         "-verbosity", "6",
                         "-logfilename", os.path.abspath("%s/%s.log" % (LOG_DIR, serverName)),
-                        "-resdir", "%s/" % RES_DIR,
+                        "-resdir", "%s/" % os.path.abspath(RES_DIR),
                         "-authfile", os.path.abspath("%s/%s.auth" % (CFG_DIR, serverName)),
                         "-motdfile", os.path.abspath("%s/%s.motd" % (CFG_DIR, serverName)),
                         "-rulesfile", os.path.abspath("%s/%s.rules" % (CFG_DIR, serverName))
@@ -706,6 +711,7 @@ rpc.register_introspection_functions()
 rpc.register_multicall_functions()
 rpc.timeout = 1200
 lastCheck = time.time()
+print "Running... Do not close this window."
 while True:
     try:
         rpc.handle_request()
