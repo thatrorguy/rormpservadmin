@@ -637,11 +637,11 @@ class exposedFunctions:
                         "-c", "%s/%s.cfg" % (CFG_DIR, serverName),
                         "-fg",
                         "-verbosity", "6",
-                        "-logfilename", "%s/%s.log" % (LOG_DIR, serverName),
+                        "-logfilename", os.path.abspath("%s/%s.log" % (LOG_DIR, serverName)),
                         "-resdir", "%s/" % RES_DIR,
-                        "-authfile", "%s/%s.auth" % (CFG_DIR, serverName),
-                        "-motdfile", "%s/%s.motd" % (CFG_DIR, serverName),
-                        "-rulesfile", "%s/%s.rules" % (CFG_DIR, serverName)
+                        "-authfile", os.path.abspath("%s/%s.auth" % (CFG_DIR, serverName)),
+                        "-motdfile", os.path.abspath("%s/%s.motd" % (CFG_DIR, serverName)),
+                        "-rulesfile", os.path.abspath("%s/%s.rules" % (CFG_DIR, serverName))
                     ]
                 )
                 server_pid = server_process[serverName]['process'].pid
