@@ -56,11 +56,11 @@ class RemoteClass
 				'method'  => 'POST',
 				'header' => Array
 				(
-					'Content-Type: text/xml'
 					//'Authorization: Basic ' . base64_encode('username:password'),
 					//'Connection: Keep-Alive',
+					'Connection: close',
 					//'Keep-Alive: 5',
-					//'Content-Type: text/plain'
+					'Content-Type: text/plain'
 				),
 				'content' => ''
 			)
@@ -70,15 +70,45 @@ class RemoteClass
 	
     protected function call($procedureName, $params = null)
 	{
-		$r = stream_context_set_option($this->context, 'http', 'method', 'POST');
-		if($r===false) throw new RemoteClassError("Failed to set context option 'method'.");
-		
-		$r = stream_context_set_option($this->context, 'http', 'content', xmlrpc_encode_request($procedureName, $params));
-		if($r===false) throw new RemoteClassError("Failed to set context option 'http'.");
+		$startTime = microtime(true);
+	
+		if(defined('USE_CURL') && USE_CURL)
+		{
+			// create curl resource 
+			$ch = curl_init(); 
 
-		// Send the result (blocking)
-		$r = @file_get_contents($this->url . '/RPC2', false, $this->context);
-		if($r===false) throw new RemoteClassError("Couldn't connect to external server.");
+			// set url 
+			curl_setopt($ch, CURLOPT_URL, $this->url . '/RPC2'); 
+
+			//return the transfer as a string 
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
+			
+			// POST requesst
+			curl_setopt($ch, CURLOPT_POST, 1);
+			curl_setopt($ch, CURLOPT_POSTFIELDS,     xmlrpc_encode_request($procedureName, $params)); 
+			curl_setopt($ch, CURLOPT_HTTPHEADER,     array('Content-Type: text/plain')); 
+
+			// $output contains the output string 
+			$r = curl_exec($ch); 
+
+			// close curl resource to free up system resources 
+			curl_close($ch);
+		}
+		else
+		{
+			$r = stream_context_set_option($this->context, 'http', 'method', 'POST');
+			if(!$r) throw new RemoteClassError("Failed to set context option 'method'.");
+			
+			$r = stream_context_set_option($this->context, 'http', 'content', xmlrpc_encode_request($procedureName, $params));
+			if(!$r) throw new RemoteClassError("Failed to set context option 'http'.");
+
+			
+			// Send the result (blocking)
+			$r = @file_get_contents($this->url . '/RPC2', false, $this->context);
+			if(!$r) throw new RemoteClassError("Couldn't connect to external server.");
+		}
+		
+		// echo microtime(true) - $startTime, "\n";
 		
 		// Convert the XML to an array and return it
 		// Note: this returns NULL with even the slightest encoding error
@@ -110,10 +140,10 @@ class RemoteClass
 	public function get()
 	{
 		$r = stream_context_set_option($this->context, 'http', 'method', 'GET');
-		if($r===false) throw new RemoteClassError("Failed to set context option 'method'.");
+		if(!$r) throw new RemoteClassError("Failed to set context option 'method'.");
 		
 		$r = stream_context_set_option($this->context, 'http', 'content', '');
-		if($r===false) throw new RemoteClassError("Failed to set context option 'http'.");
+		if(!$r) throw new RemoteClassError("Failed to set context option 'http'.");
 		
 		// construct uri
 		$uri = $this->url . '/';
@@ -125,7 +155,7 @@ class RemoteClass
 
 		// Send the result (blocking)
 		$r = @file_get_contents($uri, false, $this->context);
-		if($r===false) throw new RemoteClassError("Couldn't connect to external server.");
+		if(!$r) throw new RemoteClassError("Couldn't connect to external server.");
 		
 		return $r;
 	}

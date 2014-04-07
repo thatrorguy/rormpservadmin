@@ -12,4 +12,7 @@
 	// Error reporting?
 	error_reporting(0);
 	
+	// Use Curl?
+	define('USE_CURL', true);
+	
 ?>
