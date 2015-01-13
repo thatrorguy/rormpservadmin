@@ -57,7 +57,14 @@ try
 		{
 			if($action=='login' && array_key_exists('password', $_POST) && addslashes($_POST['password'])==PASSWORD)
 			{
-				setcookie('admin_panel_password', sha1(PASSWORD), time()+60*60*24*365, dirname($_SERVER['PHP_SELF']), reset(explode(':',$_SERVER['HTTP_HOST'])));
+				$cookieData = Array(
+					'name'   => 'admin_panel_password',
+					'value'  => sha1(PASSWORD),
+					'expire' => time()+60*60*24*365,
+					'path'   => dirname($_SERVER['PHP_SELF']),
+					'domain' => reset(explode(':',$_SERVER['HTTP_HOST'])),
+				);
+				setcookie($cookieData['name'],$cookieData['value'],$cookieData['expire'],$cookieData['path'],$cookieData['domain']);
 				$action = 'index';
 			}
 			else
@@ -79,7 +86,14 @@ try
 		// logout?
 		if($action=='logout')
 		{
-			setcookie('admin_panel_password', '', time()-3600, dirname($_SERVER['PHP_SELF']), reset(explode(':',$_SERVER['HTTP_HOST'])));
+			$cookieData = Array(
+				'name'   => 'admin_panel_password',
+				'value'  => '',
+				'expire' => time()-3600,
+				'path'   => dirname($_SERVER['PHP_SELF']),
+				'domain' => reset(explode(':',$_SERVER['HTTP_HOST'])),
+			);
+			setcookie($cookieData['name'],$cookieData['value'],$cookieData['expire'],$cookieData['path'],$cookieData['domain']);
 			$title = 'Authorization Required';
 			$content = '<form method="post" action="?action=login" style="padding: 25px;">
 								<label for="password">password: </label>
