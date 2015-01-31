@@ -108,7 +108,7 @@ STATUS_ONLINE           = 2
 STATUS_CONFLICT_ONLINE  = 3
 
 # blacklist for files
-fileReplace = re.compile(r'[^a-zA-Z0-9.\-_]+')
+fileReplace = re.compile(r'[^a-zA-Z0-9.\-_\s]+')
 
 # blacklist for servernames
 nameReplace = re.compile(r'[^a-zA-Z0-9.\-_\s]+')
