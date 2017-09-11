@@ -70,11 +70,18 @@ try
 			else
 			{
 				$title = 'Authorization Required';
-				$content = '<form method="post" action="?action=login" style="padding: 25px;">
-									<label for="password">password: </label>
-									<input type="password" name="password" autofocus />
-									<input type="submit" name="submit" />
-								</form>';
+				$content = '<div class="login-clean">
+								<form method="post" action="?action=login">
+								<h2 class="sr-only">Login Form</h2>
+								<div class="illustration"><i class="icon-lock"></i></div>
+								<div class="form-group">
+									<input type="password" name="password" placeholder="Password" class="form-control" />
+								</div>
+								<div class="form-group">
+									<button class="btn btn-primary btn-block" type="submit">Log In</button>
+								</div>
+								</form>
+							</div>';
 				$parentText = '';
 				$parentLink = '';
 				$serverstatus = 'empty';
@@ -95,11 +102,18 @@ try
 			);
 			setcookie($cookieData['name'],$cookieData['value'],$cookieData['expire'],$cookieData['path'],$cookieData['domain']);
 			$title = 'Authorization Required';
-			$content = '<form method="post" action="?action=login" style="padding: 25px;">
-								<label for="password">password: </label>
-								<input type="password" name="password" autofocus />
-								<input type="submit" name="submit" />
-							</form>';
+			$content = '<div class="login-clean">
+							<form method="post" action="?action=login">
+							<h2 class="sr-only">Login Form</h2>
+							<div class="illustration"><i class="icon-lock"></i></div>
+							<div class="form-group">
+								<input type="password" name="password" placeholder="Password" class="form-control" />
+							</div>
+							<div class="form-group">
+								<button class="btn btn-primary btn-block" type="submit">Log In</button>
+							</div>
+							</form>
+						</div>';
 			$parentText = '';
 			$parentLink = '';
 			$serverstatus = 'empty';
